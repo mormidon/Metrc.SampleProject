@@ -1,0 +1,94 @@
+﻿@{
+	ViewData["Title"] = "Member Planets";
+}
+
+<h2>Member Planets</h2>
+<br />
+<div class="btn-toolbar">
+	<div class="btn-group">
+		<button id="addmemberplanet-btn" class="btn shadow" type="button">Add Member Planet</button>
+		<button id="updatememberplanet-btn" class="btn shadow" type="button">Update Member Planet</button>
+		<button id="archivememberplanet-btn" class="btn shadow" type="button">Archive Member Planet</button>
+	</div>
+</div>
+<div id="memberplanets-grid"></div>
+
+@section Scripts {
+	<script>
+		(function () {
+			let $memberPlantsGrid = $('#memberplanets-grid');
+
+			var memberPlantsDataSource = metrc.kendo.serverDataSource({
+				url: '@Url.Action("Get", "MemberPlanetsApi")'
+			});
+
+			$memberPlantsGrid.kendoGrid({
+				dataSource: memberPlantsDataSource,
+				selectable: true,
+				columns: [
+					{
+						title: 'Planet Name', field: 'Name'
+					},
+					{
+						title: 'Location', field: 'Location',
+						template: 'X: #= Xcoordinates # Y: #= Ycoordinates # Z: #= Zcoordinates #'
+					}
+				]
+			});
+			memberPlantsDataSource.read();
+
+			$('#addmemberplanet-btn').click(function() {
+				metrc.kendo.modalWindow(
+					'Add Member Planet',
+					'@Url.Action("AddEdit", "MemberPlanets")',
+					{
+						isModal: true
+					},
+					null,
+					'@Url.Action("CreateMemberPlanet", "MemberPlanetsApi")',
+					$memberPlantsGrid);
+			});
+
+			$('#updatememberplanet-btn').click(function () {
+				let selectedId = $memberPlantsGrid.metrcGridIds('Id');
+
+				if (!selectedId || selectedId <= 0) {
+					alert("Please select an item to update");
+					return;
+				}
+
+				metrc.kendo.modalWindow(
+					'Update Member Planet',
+					'@Url.Action("AddEdit", "MemberPlanets")',
+					{
+						isModal: true,
+						id: selectedId
+					},
+					null,
+					'@Url.Action("UpdateMemberPlanet", "MemberPlanetsApi")',
+					$memberPlantsGrid);
+			});
+
+			$('#archivememberplanet-btn').click(function () {
+				let selectedId = $memberPlantsGrid.metrcGridIds('Id');
+
+				if (!selectedId || selectedId <= 0) {
+					alert("Please select an item to archive");
+					return;
+				}
+
+				if (!confirm("Are you sure you want to remove this member planet?")) {
+					return;
+				}
+
+				metrc.submitJson({
+					url: '@Url.Action("ArchiveMemberPlanet", "MemberPlanetsApi")',
+					data: { Id: selectedId[0] },
+					success: function () {
+						memberPlantsDataSource.read();
+					}
+				});
+			});
+		})();
+	</script>
+}

@@ -1,0 +1,37 @@
+﻿@model MemberPlanetsModel
+
+<form>
+	<input name="model[Id]" type="hidden" value="@Model.Id" />
+	<div class="control-group">
+		<label class="control-label">Name</label>
+		<div class="controls">
+			<input class="validate[required]" name="model[Name]" required type="text" value="@Model.Name" />
+		</div>
+	</div>
+	<br />
+	<div class="control-group">
+		<label class="control-label">X Coordinates</label>
+		<div class="controls">
+			<input class="validate[required]" name="model[xcoordinates]" required type="number" value="@Model.xcoordinates" />
+		</div>
+	</div>
+	<br />
+	<div class="control-group">
+		<label class="control-label">Y Coordinates</label>
+		<div class="controls">
+			<input class="validate[required]" name="model[ycoordinates]" required type="number" value="@Model.ycoordinates" />
+		</div>
+	</div>
+	<br />
+	<div class="control-group">
+		<label class="control-label">Z Coordinates</label>
+		<div class="controls">
+			<input class="validate[required]" name="model[zcoordinates]" required type="number" value="@Model.zcoordinates" />
+		</div>
+	</div>
+	<br />
+	<div class="form-actions">
+		<button class="btn btn-success shadow" type="submit">@(Model.UpdateModal ? "Update" : "Create") Member Planet</button>
+		<button id="cancel" class="btn shadow" type="button">Cancel</button>
+	</div>
+</form>
