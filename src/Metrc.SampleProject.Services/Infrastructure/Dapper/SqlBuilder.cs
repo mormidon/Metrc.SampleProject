@@ -10,7 +10,6 @@ namespace Metrc.SampleProject.Services.Infrastructure.Dapper
     {
         private readonly Dictionary<String, Clauses> _Data = new Dictionary<String, Clauses>();
         private Int32 _Seq;
-        private Int32 _ParameterCounter = 0;
 
         public SqlBuilder()
         {

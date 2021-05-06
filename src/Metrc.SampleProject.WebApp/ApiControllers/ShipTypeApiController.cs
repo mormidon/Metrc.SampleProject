@@ -35,6 +35,19 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
         [HttpPost("create", Name = "Create Ship Type")]
         public ActionResult CreateShipType([FromBody] ShipTypeModel shipTypeModel)
         {
+            if (shipTypeModel is null || shipTypeModel.Name is null ||
+                shipTypeModel.Name.Length == 0 || shipTypeModel.TopSpeed <= 0)
+            {
+                return BadRequest();
+            }
+            var result = _ShipTypeRepository.QueryShipType(builder =>
+            {
+                builder.Where("Name = @name", new { name = shipTypeModel.Name });
+            });
+            if (result.Data.Length != 0)
+            {
+                return BadRequest();
+            }
             _ShipTypeRepository.Create(shipTypeModel.Name, shipTypeModel.TopSpeed);
 
             return Ok(true);
@@ -43,7 +56,17 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
         [HttpPost("update", Name = "Update Ship Type")]
         public ActionResult UpdateShipType([FromBody] ShipTypeModel shipTypeModel)
         {
-            if (shipTypeModel.Id <= 0)
+            if (shipTypeModel is null || shipTypeModel.Id <= 0 || shipTypeModel.Name is null ||
+                shipTypeModel.Name.Length == 0 || shipTypeModel.TopSpeed <= 0)
+            {
+                return BadRequest();
+            }
+            var result = _ShipTypeRepository.QueryShipType(builder =>
+            {
+                builder.Where("Name = @name", new { name = shipTypeModel.Name });
+                builder.Where("Id != @id", new { id = shipTypeModel.Id });
+            });
+            if (result.Data.Length != 0)
             {
                 return BadRequest();
             }

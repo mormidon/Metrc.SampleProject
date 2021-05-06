@@ -1,0 +1,93 @@
+﻿@{
+	ViewData["Title"] = "Ship Type";
+}
+
+<h2>Ship Type</h2>
+<br />
+<div class="btn-toolbar">
+	<div class="btn-group">
+		<button id="addshiptype-btn" class="btn shadow" type="button">Add Ship Type</button>
+		<button id="updateshiptype-btn" class="btn shadow" type="button">Update Ship Type</button>
+		<button id="archiveshiptype-btn" class="btn shadow" type="button">Archive Ship Type</button>
+	</div>
+</div>
+<div id="shiptype-grid"></div>
+
+@section Scripts {
+	<script>
+		(function () {
+			let $shipTypeGrid = $('#shiptype-grid');
+
+			var shipTypeDataSource = metrc.kendo.serverDataSource({
+				url: '@Url.Action("Get", "ShipTypeApi")'
+			});
+
+			$shipTypeGrid.kendoGrid({
+				dataSource: shipTypeDataSource,
+				selectable: true,
+				columns: [
+					{
+						title: 'Ship Type', field: 'Name'
+					},
+					{
+						title: 'Top Speed (X light speed)', field: 'TopSpeed'
+					}
+				]
+			});
+			shipTypeDataSource.read();
+
+			$('#addshiptype-btn').click(function() {
+				metrc.kendo.modalWindow(
+					'Add Ship Type',
+					'@Url.Action("AddEdit", "ShipType")',
+					{
+						isModal: true
+					},
+					null,
+					'@Url.Action("CreateShipType", "ShipTypeApi")',
+					$shipTypeGrid);
+			});
+
+			$('#updateshiptype-btn').click(function () {
+				let selectedId = $shipTypeGrid.metrcGridIds('Id');
+
+				if (!selectedId || selectedId <= 0) {
+					alert("Please select an item to update");
+					return;
+				}
+
+				metrc.kendo.modalWindow(
+					'Update Ship Type',
+					'@Url.Action("AddEdit", "ShipType")',
+					{
+						isModal: true,
+						id: selectedId
+					},
+					null,
+					'@Url.Action("UpdateShipType", "ShipTypeApi")',
+					$shipTypeGrid);
+			});
+
+			$('#archiveshiptype-btn').click(function () {
+				let selectedId = $shipTypeGrid.metrcGridIds('Id');
+
+				if (!selectedId || selectedId <= 0) {
+					alert("Please select an item to archive");
+					return;
+				}
+
+				if (!confirm("Are you sure you want to remove this ship type?")) {
+					return;
+				}
+
+				metrc.submitJson({
+					url: '@Url.Action("ArchiveShipType", "ShipTypeApi")',
+					data: { Id: selectedId[0] },
+					success: function () {
+						shipTypeDataSource.read();
+					}
+				});
+			});
+		})();
+	</script>
+}

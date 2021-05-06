@@ -1,0 +1,30 @@
+﻿@model ShipInfoModel
+
+<form>
+	<input name="model[Id]" type="hidden" value="@Model.Id" />
+	<div class="control-group">
+		<label class="control-label">Name</label>
+		<div class="controls">
+			<input class="validate[required]" name="model[Name]" required type="text" value="@Model.Name" />
+		</div>
+	</div>
+	<br />
+	<div class="control-group">
+		<label class="control-label">Occupancy</label>
+		<div class="controls">
+			<input name="model[Occupancy]" type="checkbox" step="0.0001" value="@Model.Occupancy" />
+		</div>
+	</div>
+	<br />
+	<div class="control-group">
+		<label class="control-label">Status</label>
+		<div class="controls">
+			<input class="validate[required]" name="model[Status]" required type="text" value="@Model.Status" />
+		</div>
+	</div>
+	<br />
+	<div class="form-actions">
+		<button class="btn btn-success shadow" type="submit">@(Model.UpdateModal ? "Update" : "Create") Ship Info</button>
+		<button id="cancel" class="btn shadow" type="button">Cancel</button>
+	</div>
+</form>

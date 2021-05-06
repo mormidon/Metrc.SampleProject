@@ -1,5 +1,6 @@
 ﻿using Metrc.SampleProject.Services.MemberPlanets;
 using Metrc.SampleProject.Services.ShipType;
+using Metrc.SampleProject.Services.ShipInfo;
 
 namespace Metrc.SampleProject.Services.Infrastructure
 {
@@ -32,6 +33,20 @@ namespace Metrc.SampleProject.Services.Infrastructure
                 }
 
                 return _ShipTypeRepository;
+            }
+        }
+
+        private static ShipInfoRepository _ShipInfoRepository;
+        public static ShipInfoRepository ShipInfoRepository
+        {
+            get
+            {
+                if (_ShipInfoRepository == null)
+                {
+                    _ShipInfoRepository = new ShipInfoRepository(DbFactory);
+                }
+
+                return _ShipInfoRepository;
             }
         }
     }

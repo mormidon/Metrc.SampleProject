@@ -35,6 +35,18 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
         [HttpPost("create", Name = "Create Member Planet")]
         public ActionResult CreateMemberPlanet([FromBody] MemberPlanetsModel planetsModel)
         {
+            if (planetsModel is null || planetsModel.Name is null || planetsModel.Name.Length == 0)
+            {
+                return BadRequest();
+            }
+            var result = _MemberPlanetsRepository.QueryMemberPlanets(builder =>
+            {
+                builder.Where("Name = @name", new { name = planetsModel.Name });
+            });
+            if (result.Data.Length != 0)
+            {
+                return BadRequest();
+            }
             _MemberPlanetsRepository.Create(
                 planetsModel.Name, planetsModel.xcoordinates, planetsModel.ycoordinates, planetsModel.zcoordinates);
 
@@ -44,7 +56,16 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
         [HttpPost("update", Name = "Update Member Planet")]
         public ActionResult UpdateMemberPlanet([FromBody] MemberPlanetsModel planetsModel)
         {
-            if (planetsModel.Id <= 0)
+            if (planetsModel is null || planetsModel.Id <= 0 || planetsModel.Name == null || planetsModel.Name.Length == 0)
+            {
+                return BadRequest();
+            }
+            var result = _MemberPlanetsRepository.QueryMemberPlanets(builder =>
+            {
+                builder.Where("Name = @name", new { name = planetsModel.Name });
+                builder.Where("Id != @id", new { id = planetsModel.Id });
+            });
+            if (result.Data.Length != 0)
             {
                 return BadRequest();
             }
