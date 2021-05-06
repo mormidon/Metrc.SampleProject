@@ -33,8 +33,9 @@ namespace Metrc.SampleProject.WebApp.Controllers
 
                 model.Id = shipInfo.Id;
                 model.Name = shipInfo.Name;
-                model.Occupancy = shipInfo.Occupancy;
+                model.Occupancy = shipInfo.Occupancy ? "on" : "";
                 model.Status = shipInfo.Status;
+                model.ShipTypeId = shipInfo.ShipTypeId;
             }
 
             return View(model);

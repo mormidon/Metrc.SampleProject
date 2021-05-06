@@ -36,7 +36,7 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
         public ActionResult CreateShipInfo([FromBody] ShipInfoModel shipInfoModel)
         {
             if (shipInfoModel is null || shipInfoModel.Name is null ||
-                shipInfoModel.Name.Length == 0)
+                shipInfoModel.Name.Length == 0 || shipInfoModel.ShipTypeId <= 0)
             {
                 return BadRequest();
             }
@@ -48,7 +48,8 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
             {
                 return BadRequest();
             }
-            _ShipInfoRepository.Create(shipInfoModel.Name, shipInfoModel.Occupancy, shipInfoModel.Status);
+            _ShipInfoRepository.Create(shipInfoModel.Name, shipInfoModel.Occupancy == "on",
+                shipInfoModel.Status, shipInfoModel.ShipTypeId);
 
             return Ok(true);
         }
@@ -57,7 +58,7 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
         public ActionResult UpdateShipInfo([FromBody] ShipInfoModel shipInfoModel)
         {
             if (shipInfoModel is null || shipInfoModel.Id <= 0 || shipInfoModel.Name is null ||
-                shipInfoModel.Name.Length == 0)
+                shipInfoModel.Name.Length == 0 || shipInfoModel.ShipTypeId <= 0)
             {
                 return BadRequest();
             }
@@ -71,7 +72,8 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _ShipInfoRepository.Update(shipInfoModel.Id, shipInfoModel.Name, shipInfoModel.Occupancy, shipInfoModel.Status);
+            _ShipInfoRepository.Update(shipInfoModel.Id, shipInfoModel.Name,
+                shipInfoModel.Occupancy == "on", shipInfoModel.Status, shipInfoModel.ShipTypeId);
 
             return Ok(true);
         }

@@ -1,55 +1,79 @@
 ﻿@{
-	ViewData["Title"] = "Ship Type";
+	ViewData["Title"] = "Ship Info";
 }
 
-<h2>Ship Type</h2>
+<h2>Ship Info</h2>
 <br />
 <div class="btn-toolbar">
 	<div class="btn-group">
-		<button id="addshiptype-btn" class="btn shadow" type="button">Add Ship Type</button>
-		<button id="updateshiptype-btn" class="btn shadow" type="button">Update Ship Type</button>
-		<button id="archiveshiptype-btn" class="btn shadow" type="button">Archive Ship Type</button>
+        <button id="addshipinfo-btn" class="btn shadow" type="button">Add Ship Info</button>
+        <button id="updateshipinfo-btn" class="btn shadow" type="button">Update Ship Info</button>
+        <button id="archiveshipinfo-btn" class="btn shadow" type="button">Archive Ship Info</button>
 	</div>
 </div>
-<div id="shiptype-grid"></div>
+<div id="shipinfo-grid"></div>
 
 @section Scripts {
-	<script>
+    <script>
+		var shipTypeNames = new Map();
 		(function () {
-			let $shipTypeGrid = $('#shiptype-grid');
+            let $shipInfoGrid = $('#shipinfo-grid');
 
-			var shipTypeDataSource = metrc.kendo.serverDataSource({
+            const shipInfoDataSource = metrc.kendo.serverDataSource({
+				url: '@Url.Action("Get", "ShipInfoApi")'
+            });
+            shipInfoDataSource.read();
+			const shipTypeDataSource = metrc.kendo.serverDataSource({
 				url: '@Url.Action("Get", "ShipTypeApi")'
-			});
-
-			$shipTypeGrid.kendoGrid({
-				dataSource: shipTypeDataSource,
-				selectable: true,
-				columns: [
-					{
-						title: 'Ship Type', field: 'Name'
-					},
-					{
-						title: 'Top Speed (X light speed)', field: 'TopSpeed'
-					}
-				]
-			});
+            });
 			shipTypeDataSource.read();
 
-			$('#addshiptype-btn').click(function() {
+			shipTypeDataSource.fetch(() => {
+				const view = shipTypeDataSource.view();
+				shipTypeNames = new Map(view.map(x => [x.Id, x.Name]))
+                $shipInfoGrid.kendoGrid({
+                    dataSource: shipInfoDataSource,
+                    selectable: true,
+                    columns: [
+                        {
+                            title: 'Ship Info', field: 'Name'
+                        },
+                        {
+                            title: 'Occupancy', field: 'Occupancy'
+                        },
+                        {
+                            title: 'Status', field: 'Status'
+                        },
+                        {
+                            title: 'Ship Type', template: '#= shipTypeNames.get(data.ShipTypeId) #'
+                        }
+                    ]
+                });
+			});
+
+            $('#addshipinfo-btn').click(function() {
 				metrc.kendo.modalWindow(
-					'Add Ship Type',
-					'@Url.Action("AddEdit", "ShipType")',
+					'Add Ship Info',
+					'@Url.Action("AddEdit", "ShipInfo")',
 					{
 						isModal: true
 					},
 					null,
-					'@Url.Action("CreateShipType", "ShipTypeApi")',
-					$shipTypeGrid);
+					'@Url.Action("CreateShipInfo", "ShipInfoApi")',
+					$shipInfoGrid,
+					null,
+					() => {
+                        $('.shiptypedropdown').kendoDropDownList({
+                            dataTextField: 'Name',
+                            dataValueField: 'Id',
+                            dataSource: shipTypeDataSource
+                        });
+                    }
+				);
 			});
 
-			$('#updateshiptype-btn').click(function () {
-				let selectedId = $shipTypeGrid.metrcGridIds('Id');
+            $('#updateshipinfo-btn').click(function () {
+                let selectedId = $shipInfoGrid.metrcGridIds('Id');
 
 				if (!selectedId || selectedId <= 0) {
 					alert("Please select an item to update");
@@ -57,37 +81,46 @@
 				}
 
 				metrc.kendo.modalWindow(
-					'Update Ship Type',
-					'@Url.Action("AddEdit", "ShipType")',
+					'Update Ship Info',
+					'@Url.Action("AddEdit", "ShipInfo")',
 					{
 						isModal: true,
 						id: selectedId
 					},
 					null,
-					'@Url.Action("UpdateShipType", "ShipTypeApi")',
-					$shipTypeGrid);
+					'@Url.Action("UpdateShipInfo", "ShipInfoApi")',
+                    $shipInfoGrid,
+                    null,
+                    () => {
+                        $('.shiptypedropdown').kendoDropDownList({
+                            dataTextField: 'Name',
+							dataValueField: 'Id',
+                            dataSource: shipTypeDataSource
+                        });
+					}
+				);
 			});
 
-			$('#archiveshiptype-btn').click(function () {
-				let selectedId = $shipTypeGrid.metrcGridIds('Id');
+            $('#archiveshipinfo-btn').click(function () {
+                let selectedId = $shipInfoGrid.metrcGridIds('Id');
 
 				if (!selectedId || selectedId <= 0) {
 					alert("Please select an item to archive");
 					return;
 				}
 
-				if (!confirm("Are you sure you want to remove this ship type?")) {
+				if (!confirm("Are you sure you want to remove this ship info?")) {
 					return;
 				}
 
 				metrc.submitJson({
-					url: '@Url.Action("ArchiveShipType", "ShipTypeApi")',
+					url: '@Url.Action("ArchiveShipInfo", "ShipInfoApi")',
 					data: { Id: selectedId[0] },
 					success: function () {
-						shipTypeDataSource.read();
+						shipInfoDataSource.read();
 					}
 				});
 			});
 		})();
-	</script>
+    </script>
 }

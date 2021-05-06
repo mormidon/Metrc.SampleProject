@@ -35,7 +35,7 @@ namespace Metrc.SampleProject.Services.ShipInfo
             return result.Data.FirstOrDefault();
         }
 
-        public void Create(String name, Boolean occupancy, String status)
+        public void Create(String name, Boolean occupancy, String status, Int64 shipTypeId)
         {
             using (var db = DbFactory.OpenDbConnection())
             {
@@ -44,11 +44,13 @@ INSERT INTO dbo.ShipInfo(
     Name,
     Occupancy,
     Status,
+    ShipTypeId,
     IsArchived
 ) VALUES (
     @name,
     @occupancy,
     @status,
+    @shipTypeId,
     @isArchived
 );",
                     new
@@ -56,27 +58,31 @@ INSERT INTO dbo.ShipInfo(
                         name,
                         occupancy,
                         status,
+                        shipTypeId,
                         isArchived = false
                     });
 
             }
         }
 
-        public void Update(Int64 id, String name, Boolean occupancy, String status)
+        public void Update(Int64 id, String name, Boolean occupancy, String status, Int64 shipTypeId)
         {
             using (var db = DbFactory.OpenDbConnection())
             {
                 db.Execute(@"
 UPDATE dbo.ShipInfo
 SET Name = @name,
-    Occupancy = @occupancy
+    Occupancy = @occupancy,
+    Status = @status,
+    ShipTypeId = @shipTypeId
 WHERE Id = @id;",
                     new
                     {
                         id,
                         name,
                         occupancy,
-                        status
+                        status,
+                        shipTypeId
                     });
             }
         }
@@ -98,6 +104,7 @@ SELECT
     Name,
     Occupancy,
     Status,
+    ShipTypeId,
     IsArchived
 FROM dbo.ShipInfo
 /**where**/

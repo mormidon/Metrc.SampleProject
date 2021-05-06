@@ -12,7 +12,7 @@
 	<div class="control-group">
 		<label class="control-label">Occupancy</label>
 		<div class="controls">
-			<input name="model[Occupancy]" type="checkbox" step="0.0001" value="@Model.Occupancy" />
+			<input name="model[Occupancy]" type="checkbox" @(Model.Occupancy == "on" ? "checked" : "") />
 		</div>
 	</div>
 	<br />
@@ -20,6 +20,12 @@
 		<label class="control-label">Status</label>
 		<div class="controls">
 			<input class="validate[required]" name="model[Status]" required type="text" value="@Model.Status" />
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">Ship Type</label>
+		<div class="controls">
+            <input class="shiptypedropdown validate[required]" name="model[ShipTypeId]" value="@Model.ShipTypeId" required>
 		</div>
 	</div>
 	<br />
