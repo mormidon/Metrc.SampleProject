@@ -48,7 +48,7 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
             {
                 return BadRequest();
             }
-            _ShipInfoRepository.Create(shipInfoModel.Name, shipInfoModel.Occupancy == "on",
+            _ShipInfoRepository.Create(shipInfoModel.Name, shipInfoModel.Occupancy,
                 shipInfoModel.Status, shipInfoModel.ShipTypeId);
 
             return Ok(true);
@@ -73,7 +73,7 @@ namespace Metrc.SampleProject.WebApp.ApiControllers
             }
 
             _ShipInfoRepository.Update(shipInfoModel.Id, shipInfoModel.Name,
-                shipInfoModel.Occupancy == "on", shipInfoModel.Status, shipInfoModel.ShipTypeId);
+                shipInfoModel.Occupancy, shipInfoModel.Status, shipInfoModel.ShipTypeId);
 
             return Ok(true);
         }

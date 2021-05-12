@@ -35,7 +35,7 @@ namespace Metrc.SampleProject.Services.ShipInfo
             return result.Data.FirstOrDefault();
         }
 
-        public void Create(String name, Boolean occupancy, String status, Int64 shipTypeId)
+        public void Create(String name, Int64 occupancy, String status, Int64 shipTypeId)
         {
             using (var db = DbFactory.OpenDbConnection())
             {
@@ -65,7 +65,7 @@ INSERT INTO dbo.ShipInfo(
             }
         }
 
-        public void Update(Int64 id, String name, Boolean occupancy, String status, Int64 shipTypeId)
+        public void Update(Int64 id, String name, Int64 occupancy, String status, Int64 shipTypeId)
         {
             using (var db = DbFactory.OpenDbConnection())
             {

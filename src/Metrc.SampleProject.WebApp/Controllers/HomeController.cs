@@ -13,7 +13,7 @@ namespace Metrc.SampleProject.WebApp.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Welocome to the First Galactic Empire.";
+            ViewData["Message"] = "Welcome to the First Galactic Empire.";
 
             return View();
         }

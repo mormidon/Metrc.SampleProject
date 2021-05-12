@@ -12,7 +12,7 @@
 	<div class="control-group">
 		<label class="control-label">Occupancy</label>
 		<div class="controls">
-			<input name="model[Occupancy]" type="checkbox" @(Model.Occupancy == "on" ? "checked" : "") />
+			<input name="model[Occupancy]" required type="number" value="@Model.Occupancy" />
 		</div>
 	</div>
 	<br />

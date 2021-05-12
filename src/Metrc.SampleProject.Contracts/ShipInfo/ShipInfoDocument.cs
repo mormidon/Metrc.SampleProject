@@ -6,7 +6,7 @@ namespace Metrc.SampleProject.Contracts.ShipInfo
     {
         public Int64 Id { get; set; }
         public String Name { get; set; }
-        public Boolean Occupancy { get; set; }
+        public Int64 Occupancy { get; set; }
         public String Status { get; set; }
         public Int64 ShipTypeId { get; set; }
         public Boolean IsArchived { get; set; }
